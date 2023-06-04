@@ -5,6 +5,9 @@ import sky.pro.exception.OutOfBoundException;
 import sky.pro.exception.TooLittleArrayException;
 import sky.pro.interfaces.IntegerList;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class IntegerListImpl implements IntegerList {
 
     private Integer[] storage;
@@ -15,13 +18,68 @@ public class IntegerListImpl implements IntegerList {
     }
 
     public static void bubbleSort(IntegerListImpl list) {
-        for (int i = 0; i < list.size(); i++) {
-            for (int j = 0; j < list.size(); j++) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = 0; j < list.size() - 1; j++) {
                 if (list.get(j) > list.get(j + 1)) {
                     swap(list, j, j + 1);
                 }
             }
         }
+    }
+
+    public static void selectionSort(IntegerListImpl list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < list.size(); j++) {
+                if (list.get(j) < list.get(minIndex)) {
+                    minIndex = j;
+                }
+            }
+            swap(list, i, minIndex);
+        }
+    }
+
+    public static void insertionSort(IntegerListImpl list) {
+        for (int i = 1; i < list.size(); i++) {
+            int current = list.get(i);
+            int j = i;
+            while (j > 0 && list.get(j - 1) > current) {
+                list.set(j, list.get(j - 1));
+                j--;
+            }
+            list.set(j, current);
+        }
+    }
+
+    private void privateInsertionSort() {
+        for (int i = 1; i < storage.length; i++) {
+            if (storage[i] != null) {
+                int current = storage[i];
+                int j = i;
+                while (j > 0 && storage[j - 1] > current) {
+                    storage[j] = storage[j - 1];
+                    j--;
+                }
+                storage[j] = current;
+            }
+        }
+    }
+
+    private boolean binarySearch(Integer x) {
+        int min = 0;
+        int max = this.size() - 1;
+        while (min <= max) {
+            int mid = (max + min) / 2;
+            if (storage[mid].equals(x)) {
+                return true;
+            }
+            if (x < storage[mid]) {
+                max = mid - 1;
+            } else {
+                min = mid +1;
+            }
+        }
+        return false;
     }
 
     private static void swap(IntegerListImpl list, int index1, int index2) {
@@ -91,15 +149,20 @@ public class IntegerListImpl implements IntegerList {
         return del;
     }
 
-    @Override
+/*    @Override
     public boolean contains(Integer item) {
         if (indexOf(item) != -1) {
             return true;
         } else {
             return false;
         }
+    }*/
+    @Override
+    public boolean contains(Integer item) {
+        Integer[] copy = this.toArray();
+        privateInsertionSort();
+        return binarySearch(item);
     }
-
     @Override
     public int indexOf(Integer item) throws NullPointerException {
         if (item == null) {
@@ -136,25 +199,14 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public boolean equals(IntegerListImpl otherList) throws NullPointerException {
-/*
-        if (otherList == null) {
+        if (Objects.isNull(otherList)) {
             throw new NullPointerException();
         }
         if (otherList == this) {
             return true;
         }
 
-        for (int i = 0; i < storage.length - 1; i++) {
-            if (storage[i] == null && otherList.get(i) == null) {
-                break;
-            } else if ((int) storage[i] != (int) otherList.get(i)) {
-                return false;
-
-            }
-        }
-*/
-
-        return true;
+        return Arrays.equals(this.toArray(), otherList.toArray());
     }
 
     @Override
@@ -182,8 +234,10 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public Integer[] toArray() {
-        Integer[] out = new Integer[storage.length];
-        System.arraycopy(storage, 0, out, 0, storage.length);
+        Integer[] out = new Integer[this.size()];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = storage[i];
+        }
         return out;
     }
 
