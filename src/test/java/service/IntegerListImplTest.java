@@ -30,9 +30,7 @@ class IntegerListImplTest {
         out.add(4);
         out.add(113);
         out.add(1);
-        Integer[] test = out.toArray();
-        int i = out.size();
-        IntegerListImpl.quickSort(out.toArray(), 0, out.size() - 1);
+        IntegerListImpl.quickSort(out.toArray(), 0, out.toArray().length - 1);
         System.out.println(out.toArray());
     }
 

@@ -112,7 +112,7 @@ public class IntegerListImpl implements IntegerList {
     private static void swap(Integer[] list, int index1, int index2) {
         int tmp = list[index1];
         list[index1] = list[index2];
-        list[index2] = list[tmp];
+        list[index2] = tmp;
     }
 
     @Override
