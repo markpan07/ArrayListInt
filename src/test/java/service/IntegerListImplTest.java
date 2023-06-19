@@ -25,6 +25,16 @@ class IntegerListImplTest {
     }
 
     @Test
+    void quickSort() {
+        out.add(27);
+        out.add(4);
+        out.add(113);
+        out.add(1);
+        IntegerListImpl.quickSort(out.toArray(), 0, out.toArray().length - 1);
+        System.out.println(out.toArray());
+    }
+
+    @Test
     void bubbleSort() {
         out.add(27);
         out.add(4);

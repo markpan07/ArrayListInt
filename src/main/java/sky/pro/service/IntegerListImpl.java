@@ -5,6 +5,7 @@ import sky.pro.exception.OutOfBoundException;
 import sky.pro.exception.TooLittleArrayException;
 import sky.pro.interfaces.IntegerList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -12,6 +13,7 @@ public class IntegerListImpl implements IntegerList {
 
     private Integer[] storage;
     int pointer = 0;
+
 
     public IntegerListImpl(int arraySize) {
         storage = new Integer[arraySize];
@@ -21,7 +23,7 @@ public class IntegerListImpl implements IntegerList {
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = 0; j < list.size() - 1; j++) {
                 if (list.get(j) > list.get(j + 1)) {
-                    swap(list, j, j + 1);
+                    swap(list.toArray(), j, j + 1);
                 }
             }
         }
@@ -35,7 +37,7 @@ public class IntegerListImpl implements IntegerList {
                     minIndex = j;
                 }
             }
-            swap(list, i, minIndex);
+            swap(list.toArray(), i, minIndex);
         }
     }
 
@@ -51,6 +53,31 @@ public class IntegerListImpl implements IntegerList {
         }
     }
 
+    public static void quickSort(Integer[] arr, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
+        }
+    }
+
+    private static int partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swap(arr, i, j);
+            }
+        }
+
+        swap(arr, i + 1, end);
+        return i + 1;
+    }
+    
     private void privateInsertionSort() {
         for (int i = 1; i < storage.length; i++) {
             if (storage[i] != null) {
@@ -82,10 +109,10 @@ public class IntegerListImpl implements IntegerList {
         return false;
     }
 
-    private static void swap(IntegerListImpl list, int index1, int index2) {
-        int tmp = list.get(index1);
-        list.set(index1, list.get(index2));
-        list.set(index2, tmp);
+    private static void swap(Integer[] list, int index1, int index2) {
+        int tmp = list[index1];
+        list[index1] = list[index2];
+        list[index2] = tmp;
     }
 
     @Override
